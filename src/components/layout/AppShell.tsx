@@ -52,15 +52,15 @@ export function AppShell() {
       </div>
 
       {/* Mobile layout */}
-      <div className="flex md:hidden flex-col h-screen">
-        <div className="flex-1 overflow-hidden">
+      <div className="flex md:hidden flex-col overflow-hidden" style={{ height: "100dvh" }}>
+        <div className="flex-1 overflow-hidden min-h-0">
           {mobileTab === "notes" && <Sidebar />}
           {mobileTab === "editor" && <NoteEditor />}
           {mobileTab === "ai" && <AIPanel />}
         </div>
 
         {/* Bottom tab bar */}
-        <div className="glass flex items-center justify-around px-4 py-3 border-t border-white/10">
+        <div className="glass flex items-center justify-around px-4 py-3 border-t border-white/10 shrink-0">
           <button
             onClick={() => setMobileTab("notes")}
             className={`flex flex-col items-center gap-1 px-4 py-1 rounded-xl transition-all ${

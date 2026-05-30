@@ -185,7 +185,7 @@ export function NoteEditor() {
           <textarea
             value={content}
             onChange={(e) => handleContentChange(e.target.value)}
-            placeholder="Start writing in Markdown..."
+            placeholder="Start writing..."
             className="h-full w-full resize-none bg-transparent px-8 py-6 text-[15px] leading-relaxed text-white/85 placeholder:text-white/30 focus:outline-none"
             spellCheck
           />

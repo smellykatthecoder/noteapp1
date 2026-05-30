@@ -84,6 +84,11 @@ body {
   overflow: hidden;
 }
 
+#__next {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   color: var(--text-primary);
   font-family: "Satoshi", sans-serif;
