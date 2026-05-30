@@ -157,17 +157,20 @@ export function useCloudSync() {
   useEffect(() => {
     if (!supabase || !user) return;
 
-    const unsub = useNotesStore.subscribe(
-      (state) => ({ notes: state.notes, folders: state.folders }),
-      (slice) => {
-        if (applyingRemoteRef.current) return;
-        if (pushTimer.current) clearTimeout(pushTimer.current);
-        pushTimer.current = setTimeout(() => {
-          void pushToCloud(user, slice.folders, slice.notes);
-        }, 900);
-      },
-      { equalityFn: (a, b) => a.notes === b.notes && a.folders === b.folders }
-    );
+    let prevNotes = useNotesStore.getState().notes;
+    let prevFolders = useNotesStore.getState().folders;
+
+    const unsub = useNotesStore.subscribe((state) => {
+      if (state.notes === prevNotes && state.folders === prevFolders) return;
+      prevNotes = state.notes;
+      prevFolders = state.folders;
+
+      if (applyingRemoteRef.current) return;
+      if (pushTimer.current) clearTimeout(pushTimer.current);
+      pushTimer.current = setTimeout(() => {
+        void pushToCloud(user, state.folders, state.notes);
+      }, 900);
+    });
 
     return () => {
       unsub();
@@ -207,4 +210,3 @@ export function useCloudSync() {
     syncNow,
   };
 }
-
