@@ -1,4 +1,4 @@
-type ClassValue = string | number | boolean | undefined | null | ClassValue[];
+export type ClassValue = string | number | boolean | undefined | null | ClassValue[];
 
 export function clsx(...inputs: ClassValue[]): string {
   const classes: string[] = [];
