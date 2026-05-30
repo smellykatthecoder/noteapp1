@@ -263,3 +263,8 @@ body {
   color: #a5b4fc;
   text-decoration: underline;
 }
+/* Accessibility — bump font weights for readability */
+.font-normal { font-weight: 500; }
+.font-medium { font-weight: 700; }
+.font-semibold { font-weight: 800; }
+.font-bold { font-weight: 900; }
