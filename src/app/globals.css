@@ -67,8 +67,8 @@
   --glass-blur: 24px;
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
   --text-primary: rgba(255, 255, 255, 0.95);
-  --text-secondary: rgba(255, 255, 255, 0.65);
-  --text-muted: rgba(255, 255, 255, 0.45);
+  --text-secondary: rgb(255, 255, 255);
+  --text-muted: rgba(255, 255, 255, 0.843);
   --transition-fluid: all 0.3s ease-in-out;
 }
 
