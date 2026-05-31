@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@excalidraw/excalidraw": "^0.18.1",
     "@supabase/supabase-js": "^2.49.1",
     "@tiptap/extension-link": "^3.24.0",
     "@tiptap/extension-placeholder": "^3.24.0",
