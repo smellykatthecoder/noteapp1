@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Eye, EyeOff, Pin, Tag, Save } from "lucide-react";
+import { Eye, EyeOff, Pin, Tag, Save, Bold, Italic, Strikethrough, List, ListOrdered, Quote, Code, Heading1, Heading2, Link } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { GlassPanel } from "@/components/ui/GlassPanel";
@@ -9,6 +9,14 @@ import { useNotesStore } from "@/store/notesStore";
 import { cn } from "@/lib/utils";
 
 const AUTOSAVE_DELAY_MS = 800;
+
+type FormatAction = {
+  icon: React.ReactNode;
+  label: string;
+  prefix: string;
+  suffix?: string;
+  block?: boolean;
+};
 
 export function NoteEditor() {
   const { notes, activeNoteId, updateNote, togglePin } = useNotesStore();
@@ -20,6 +28,7 @@ export function NoteEditor() {
   const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "idle">("idle");
   const [tagInput, setTagInput] = useState("");
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (activeNote) {
@@ -63,6 +72,38 @@ export function NoteEditor() {
     scheduleSave(title, value);
   };
 
+  const applyFormat = (prefix: string, suffix?: string, block?: boolean) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selected = content.slice(start, end);
+    const sfx = suffix ?? prefix;
+
+    let newContent: string;
+    let newStart: number;
+    let newEnd: number;
+
+    if (block) {
+      const lineStart = content.lastIndexOf("\n", start - 1) + 1;
+      const before = content.slice(0, lineStart);
+      const after = content.slice(lineStart);
+      newContent = before + prefix + after;
+      newStart = newEnd = lineStart + prefix.length;
+    } else {
+      newContent = content.slice(0, start) + prefix + selected + sfx + content.slice(end);
+      newStart = start + prefix.length;
+      newEnd = end + prefix.length;
+    }
+
+    handleContentChange(newContent);
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(newStart, newEnd);
+    }, 0);
+  };
+
   const addTag = () => {
     const tag = tagInput.trim().toLowerCase();
     if (!tag || !activeNote) return;
@@ -80,6 +121,19 @@ export function NoteEditor() {
       tags: activeNote.tags.filter((t) => t !== tag),
     });
   };
+
+  const formatActions: FormatAction[] = [
+    { icon: <Heading1 className="h-3.5 w-3.5" />, label: "H1", prefix: "# ", block: true },
+    { icon: <Heading2 className="h-3.5 w-3.5" />, label: "H2", prefix: "## ", block: true },
+    { icon: <Bold className="h-3.5 w-3.5" />, label: "Bold", prefix: "**", suffix: "**" },
+    { icon: <Italic className="h-3.5 w-3.5" />, label: "Italic", prefix: "_", suffix: "_" },
+    { icon: <Strikethrough className="h-3.5 w-3.5" />, label: "Strikethrough", prefix: "~~", suffix: "~~" },
+    { icon: <Code className="h-3.5 w-3.5" />, label: "Code", prefix: "`", suffix: "`" },
+    { icon: <List className="h-3.5 w-3.5" />, label: "Bullet list", prefix: "- ", block: true },
+    { icon: <ListOrdered className="h-3.5 w-3.5" />, label: "Numbered list", prefix: "1. ", block: true },
+    { icon: <Quote className="h-3.5 w-3.5" />, label: "Quote", prefix: "> ", block: true },
+    { icon: <Link className="h-3.5 w-3.5" />, label: "Link", prefix: "[", suffix: "](url)" },
+  ];
 
   if (!activeNote) {
     return (
@@ -174,6 +228,23 @@ export function NoteEditor() {
         />
       </div>
 
+      {/* Formatting toolbar */}
+      {!preview && (
+        <div className="flex flex-wrap items-center gap-1 border-b border-white/10 px-4 py-2">
+          {formatActions.map((action) => (
+            <button
+              key={action.label}
+              type="button"
+              title={action.label}
+              onClick={() => applyFormat(action.prefix, action.suffix, action.block)}
+              className="glass-button rounded-md p-1.5 text-white/70 hover:text-white"
+            >
+              {action.icon}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="flex-1 overflow-hidden">
         {preview ? (
           <div className="markdown-preview h-full overflow-y-auto px-8 py-6">
@@ -183,6 +254,7 @@ export function NoteEditor() {
           </div>
         ) : (
           <textarea
+            ref={textareaRef}
             value={content}
             onChange={(e) => handleContentChange(e.target.value)}
             placeholder="Start writing..."
