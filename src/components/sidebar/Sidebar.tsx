@@ -42,9 +42,6 @@ export function Sidebar() {
   const [semanticResults, setSemanticResults] = useState<SemanticSearchResult[] | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [searchMode, setSearchMode] = useState<"keyword" | "semantic">("keyword");
-  const [email, setEmail] = useState("");
-  const [authMsg, setAuthMsg] = useState<string | null>(null);
-  const [authLoading, setAuthLoading] = useState(false);
   const [sidebarView, setSidebarView] = useState<SidebarView>("notes");
   const [newFolderName, setNewFolderName] = useState("");
   const [newFolderColor, setNewFolderColor] = useState(FOLDER_COLORS[0]);
@@ -88,10 +85,6 @@ export function Sidebar() {
 
   const handleRenameFolder = (id: string) => {
     if (!editingFolderName.trim()) return;
-    // update folder name/color via store — we'll use a workaround since notesStore doesn't have updateFolder yet
-    const folder = folders.find((f) => f.id === id);
-    if (!folder) return;
-    // patch via zustand directly
     useNotesStore.setState((state) => ({
       folders: state.folders.map((f) =>
         f.id === id ? { ...f, name: editingFolderName.trim(), color: editingFolderColor } : f
@@ -102,7 +95,6 @@ export function Sidebar() {
 
   return (
     <GlassPanel className="flex h-full w-80 shrink-0 flex-col overflow-hidden">
-      {/* Header */}
       <div className="border-b border-white/10 p-4">
         <div className="mb-4 flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-indigo-300" />
@@ -111,20 +103,14 @@ export function Sidebar() {
 
         {/* View toggle */}
         <div className="mb-4 flex rounded-xl bg-white/5 p-1">
-          <button
-            type="button"
-            onClick={() => setSidebarView("notes")}
+          <button type="button" onClick={() => setSidebarView("notes")}
             className={cn("flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-medium transition-all",
-              sidebarView === "notes" ? "bg-white/15 text-white" : "text-white/50 hover:text-white")}
-          >
+              sidebarView === "notes" ? "bg-white/15 text-white" : "text-white/50 hover:text-white")}>
             <Search className="h-3.5 w-3.5" /> Notes
           </button>
-          <button
-            type="button"
-            onClick={() => setSidebarView("notebooks")}
+          <button type="button" onClick={() => setSidebarView("notebooks")}
             className={cn("flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-medium transition-all",
-              sidebarView === "notebooks" ? "bg-white/15 text-white" : "text-white/50 hover:text-white")}
-          >
+              sidebarView === "notebooks" ? "bg-white/15 text-white" : "text-white/50 hover:text-white")}>
             <BookOpen className="h-3.5 w-3.5" /> Notebooks
           </button>
         </div>
@@ -148,31 +134,28 @@ export function Sidebar() {
               <RefreshCw className={cn("h-3.5 w-3.5", cloud.syncing && "animate-spin")} /> Sync
             </button>
           </div>
-          {cloud.syncError && <div className="mt-2 rounded-lg bg-red-500/20 px-2.5 py-2 text-xs text-red-200">{cloud.syncError}</div>}
+          {cloud.syncError && (
+            <div className="mt-2 rounded-lg bg-red-500/20 px-2.5 py-2 text-xs text-red-200">{cloud.syncError}</div>
+          )}
           {userEmail ? (
             <div className="mt-2 flex items-center justify-between gap-2">
               <div className="min-w-0">
                 <p className="truncate text-xs text-white/70">{userEmail}</p>
-                <p className="text-[10px] text-white/40">{cloud.lastSyncAt ? `Last sync: ${new Date(cloud.lastSyncAt).toLocaleString()}` : "Not synced yet"}</p>
+                <p className="text-[10px] text-white/40">
+                  {cloud.lastSyncAt ? `Last sync: ${new Date(cloud.lastSyncAt).toLocaleString()}` : "Not synced yet"}
+                </p>
               </div>
-              <button type="button" onClick={() => cloud.signOut()} className="glass-button rounded-lg p-2 text-white/60 hover:text-white" title="Sign out">
+              <button type="button" onClick={() => cloud.signOut()}
+                className="glass-button rounded-lg p-2 text-white/60 hover:text-white" title="Sign out">
                 <LogOut className="h-4 w-4" />
               </button>
             </div>
           ) : (
-            <div className="mt-2 space-y-2">
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@email.com" className="glass-input w-full rounded-lg px-3 py-2 text-xs" />
-              <button type="button" disabled={!cloudEnabled || !cloud.available || authLoading || !email.trim()}
-                onClick={async () => {
-                  setAuthLoading(true); setAuthMsg(null);
-                  try { await cloud.signInWithEmail(email); setAuthMsg("Check your email for the sign-in link."); }
-                  catch (e) { setAuthMsg(e instanceof Error ? e.message : "Sign-in failed"); }
-                  finally { setAuthLoading(false); }
-                }}
-                className="glass-button glass-button-primary w-full rounded-lg px-3 py-2 text-xs font-medium disabled:opacity-40">
-                {authLoading ? "Sending link..." : "Sign in (email link)"}
-              </button>
-              {authMsg && <p className="text-[11px] text-white/55">{authMsg}</p>}
+            <div className="mt-2">
+              <a href="/auth"
+                className="glass-button glass-button-primary flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-medium">
+                Sign in to sync
+              </a>
             </div>
           )}
         </div>
@@ -210,15 +193,12 @@ export function Sidebar() {
       </div>
 
       <div className="flex-1 overflow-y-auto">
-
         {/* NOTEBOOKS VIEW */}
         {sidebarView === "notebooks" && (
           <section className="p-3">
             <h2 className="mb-3 flex items-center gap-1.5 px-1 text-xs font-medium uppercase tracking-wider text-white/50">
               <BookOpen className="h-3.5 w-3.5" /> Notebooks
             </h2>
-
-            {/* New folder form */}
             {showNewFolder && (
               <div className="mb-3 rounded-xl border border-white/15 bg-white/5 p-3 space-y-2">
                 <input type="text" value={newFolderName} onChange={(e) => setNewFolderName(e.target.value)}
@@ -238,7 +218,6 @@ export function Sidebar() {
                 </div>
               </div>
             )}
-
             <ul className="space-y-1">
               <li>
                 <button type="button" onClick={() => { setSelectedFolderId(null); setSidebarView("notes"); }}
@@ -273,8 +252,7 @@ export function Sidebar() {
                     </div>
                   ) : (
                     <div className="group flex items-center gap-1 rounded-lg transition-all hover:bg-white/10">
-                      <button type="button"
-                        onClick={() => { setSelectedFolderId(folder.id); setSidebarView("notes"); }}
+                      <button type="button" onClick={() => { setSelectedFolderId(folder.id); setSidebarView("notes"); }}
                         className="flex flex-1 items-center gap-2 px-3 py-2.5 text-sm text-white/70 hover:text-white">
                         <span className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: folder.color ?? "#a78bfa" }} />
                         <span className="truncate">{folder.name}</span>
