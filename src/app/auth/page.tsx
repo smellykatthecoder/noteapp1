@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { getSupabaseClient } from "@/lib/supabase";
-import { Sparkles, Mail, Chrome } from "lucide-react";
+import { Sparkles, Mail } from "lucide-react";
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");
@@ -39,8 +39,9 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center p-4">
+    <div className="flex min-h-screen flex-col items-center justify-center p-4">
       <div className="app-background" aria-hidden="true" />
+      
       <div className="glass w-full max-w-sm rounded-2xl p-8">
         <div className="mb-8 flex flex-col items-center gap-3">
           <div className="glass rounded-2xl p-3">
@@ -102,6 +103,13 @@ export default function AuthPage() {
           No account needed — sign in creates one automatically
         </p>
       </div>
+
+      <footer className="mt-6 text-center text-xs text-white/30">
+        <a href="https://liquidnotes-privacy.netlify.app/" target="_blank" rel="noopener noreferrer"
+          className="hover:text-white/60 transition-colors underline underline-offset-2">
+          Privacy Policy
+        </a>
+      </footer>
     </div>
   );
 }
