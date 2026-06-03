@@ -59,6 +59,8 @@
   font-style: italic;
 }
 
+@import "tldraw/tldraw.css";
+
 @import "tailwindcss";
 
 :root {

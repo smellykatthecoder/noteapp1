@@ -6,11 +6,14 @@ import { GlassPanel } from "@/components/ui/GlassPanel";
 
 const Tldraw = dynamic(
   async () => (await import("tldraw")).Tldraw,
-  { ssr: false, loading: () => (
-    <div className="flex h-full items-center justify-center text-white/50 text-sm">
-      Loading canvas...
-    </div>
-  )}
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex h-full items-center justify-center text-white/50 text-sm">
+        Loading canvas...
+      </div>
+    ),
+  }
 );
 
 export function DrawingCanvas() {
@@ -23,8 +26,13 @@ export function DrawingCanvas() {
         <h2 className="text-lg font-semibold text-white">Drawing Canvas</h2>
         <span className="text-xs text-white/40">Freehand · Shapes · Text · Highlighting</span>
       </header>
-      <div className="flex-1 overflow-hidden" style={{ position: "relative" }}>
-        {mounted && <Tldraw />}
+      <div className="flex-1 overflow-hidden" style={{ position: "relative", width: "100%", height: "100%" }}>
+        {mounted && (
+          <Tldraw
+            hideUi={false}
+            className="absolute inset-0"
+          />
+        )}
       </div>
     </GlassPanel>
   );
