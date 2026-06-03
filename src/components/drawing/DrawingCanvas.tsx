@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { GlassPanel } from "@/components/ui/GlassPanel";
+import type { Editor } from "tldraw";
 
 const Tldraw = dynamic(
   async () => (await import("tldraw")).Tldraw,
@@ -16,9 +17,31 @@ const Tldraw = dynamic(
   }
 );
 
+const STORAGE_KEY = "liquid-notes-drawing";
+
 export function DrawingCanvas() {
   const [mounted, setMounted] = useState(false);
+
   useEffect(() => { setMounted(true); }, []);
+
+  const handleMount = (editor: Editor) => {
+    // Load saved drawing
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const snapshot = JSON.parse(saved);
+        editor.loadSnapshot(snapshot);
+      }
+    } catch {}
+
+    // Auto-save every 2 seconds when changes happen
+    editor.store.listen(() => {
+      try {
+        const snapshot = editor.getSnapshot();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+      } catch {}
+    }, { scope: "document", source: "user" });
+  };
 
   return (
     <GlassPanel className="flex flex-1 flex-col overflow-hidden">
@@ -31,6 +54,7 @@ export function DrawingCanvas() {
           <Tldraw
             hideUi={false}
             className="absolute inset-0"
+            onMount={handleMount}
           />
         )}
       </div>
