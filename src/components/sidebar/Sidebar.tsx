@@ -104,12 +104,12 @@ export function Sidebar() {
         {/* View toggle */}
         <div className="mb-4 flex rounded-xl bg-white/5 p-1">
           <button type="button" onClick={() => setSidebarView("notes")}
-            className={cn("flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-medium transition-all",
+            className={cn("tab-slider flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-medium transition-all",
               sidebarView === "notes" ? "bg-white/15 text-white" : "text-white/50 hover:text-white")}>
             <Search className="h-3.5 w-3.5" /> Notes
           </button>
           <button type="button" onClick={() => setSidebarView("notebooks")}
-            className={cn("flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-medium transition-all",
+            className={cn("tab-slider flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-medium transition-all",
               sidebarView === "notebooks" ? "bg-white/15 text-white" : "text-white/50 hover:text-white")}>
             <BookOpen className="h-3.5 w-3.5" /> Notebooks
           </button>
@@ -221,7 +221,7 @@ export function Sidebar() {
             <ul className="space-y-1">
               <li>
                 <button type="button" onClick={() => { setSelectedFolderId(null); setSidebarView("notes"); }}
-                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-white/70 hover:bg-white/10 hover:text-white transition-all">
+                  className="folder-item flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-white/70 hover:bg-white/10 hover:text-white">
                   <FolderOpen className="h-4 w-4" />
                   All Notes
                   <span className="ml-auto text-xs text-white/40">{notes.length}</span>
@@ -251,9 +251,10 @@ export function Sidebar() {
                       </div>
                     </div>
                   ) : (
-                    <div className="group flex items-center gap-1 rounded-lg transition-all hover:bg-white/10">
+                    <div className={cn("folder-item group flex items-center gap-1 rounded-lg",
+                      selectedFolderId === folder.id ? "active bg-white/15 text-white" : "text-white/70 hover:bg-white/10")}>
                       <button type="button" onClick={() => { setSelectedFolderId(folder.id); setSidebarView("notes"); }}
-                        className="flex flex-1 items-center gap-2 px-3 py-2.5 text-sm text-white/70 hover:text-white">
+                        className="flex flex-1 items-center gap-2 px-3 py-2.5 text-sm hover:text-white">
                         <span className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: folder.color ?? "#a78bfa" }} />
                         <span className="truncate">{folder.name}</span>
                         <span className="ml-auto text-xs text-white/40">{notes.filter((n) => n.folderId === folder.id).length}</span>
@@ -289,8 +290,8 @@ export function Sidebar() {
               <ul className="space-y-0.5">
                 <li>
                   <button type="button" onClick={() => setSelectedFolderId(null)}
-                    className={cn("flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-all ease-in-out",
-                      !selectedFolderId && !selectedTag ? "bg-white/15 text-white" : "text-white/70 hover:bg-white/10 hover:text-white")}>
+                    className={cn("folder-item flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm",
+                      !selectedFolderId && !selectedTag ? "active bg-white/15 text-white" : "text-white/70 hover:bg-white/10 hover:text-white")}>
                     <FolderOpen className="h-4 w-4" />
                     All Notes
                     <span className="ml-auto text-xs text-white/40">{notes.length}</span>
@@ -299,8 +300,8 @@ export function Sidebar() {
                 {folders.map((folder) => (
                   <li key={folder.id}>
                     <button type="button" onClick={() => setSelectedFolderId(folder.id)}
-                      className={cn("flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-all ease-in-out",
-                        selectedFolderId === folder.id ? "bg-white/15 text-white" : "text-white/70 hover:bg-white/10 hover:text-white")}>
+                      className={cn("folder-item flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm",
+                        selectedFolderId === folder.id ? "active bg-white/15 text-white" : "text-white/70 hover:bg-white/10 hover:text-white")}>
                       <span className="h-2 w-2 rounded-full" style={{ backgroundColor: folder.color ?? "#a78bfa" }} />
                       {folder.name}
                       <span className="ml-auto text-xs text-white/40">{notes.filter((n) => n.folderId === folder.id).length}</span>
@@ -318,8 +319,8 @@ export function Sidebar() {
                 <div className="flex flex-wrap gap-1.5 px-1">
                   {allTags.map((tag) => (
                     <button key={tag} type="button" onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
-                      className={cn("rounded-full px-2.5 py-1 text-xs transition-all ease-in-out",
-                        selectedTag === tag ? "bg-indigo-500/40 text-white ring-1 ring-white/30" : "bg-white/10 text-white/70 hover:bg-white/15 hover:text-white")}>
+                      className={cn("tag-pill rounded-full px-2.5 py-1 text-xs",
+                        selectedTag === tag ? "active bg-indigo-500/40 text-white ring-1 ring-white/30" : "bg-white/10 text-white/70 hover:bg-white/15 hover:text-white")}>
                       {tag}
                     </button>
                   ))}
@@ -335,8 +336,8 @@ export function Sidebar() {
                 <ul className="space-y-1">
                   {displayNotes.map(({ note, reason }) => (
                     <li key={note.id}>
-                      <div className={cn("group flex items-start gap-1 rounded-xl transition-all ease-in-out",
-                        activeNoteId === note.id ? "bg-white/15 ring-1 ring-white/20" : "hover:bg-white/10")}>
+                      <div className={cn("note-item group flex items-start gap-1 rounded-xl",
+                        activeNoteId === note.id ? "active ring-1 ring-white/20" : "hover:bg-white/10")}>
                         <button type="button" onClick={() => setActiveNoteId(note.id)} className="min-w-0 flex-1 px-3 py-2.5 text-left">
                           <div className="flex items-center gap-1.5">
                             {note.pinned && <Pin className="h-3 w-3 shrink-0 fill-amber-300 text-amber-300" />}
