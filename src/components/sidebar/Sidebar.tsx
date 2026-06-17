@@ -95,37 +95,37 @@ export function Sidebar() {
 
   return (
     <GlassPanel className="flex h-full w-80 shrink-0 flex-col overflow-hidden">
-      <div className="border-b border-white/10 p-4">
+      <div className="border-b border-white/20 p-4">
         <div className="mb-4 flex items-center gap-2">
         <span className="text-xl">📝</span>
         <h1 className="text-shadow-readable text-lg font-semibold tracking-tight">Liquid Notes</h1>
         </div>
 
         {/* View toggle */}
-        <div className="mb-4 flex rounded-xl bg-white/5 p-1">
+        <div className="mb-4 flex rounded-xl bg-white/10 p-1">
           <button type="button" onClick={() => setSidebarView("notes")}
             className={cn("tab-slider flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-medium transition-all",
-              sidebarView === "notes" ? "bg-white/15 text-white" : "text-white/50 hover:text-white")}>
+              sidebarView === "notes" ? "bg-white/25 text-white" : "text-white/60 hover:text-white")}>
             <Search className="h-3.5 w-3.5" /> Notes
           </button>
           <button type="button" onClick={() => setSidebarView("notebooks")}
             className={cn("tab-slider flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-medium transition-all",
-              sidebarView === "notebooks" ? "bg-white/15 text-white" : "text-white/50 hover:text-white")}>
+              sidebarView === "notebooks" ? "bg-white/25 text-white" : "text-white/60 hover:text-white")}>
             <BookOpen className="h-3.5 w-3.5" /> Notebooks
           </button>
         </div>
 
         {/* Cloud sync */}
-        <div className="mb-4 rounded-xl border border-white/10 bg-white/5 p-3">
-          <div className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-white/50">
+        <div className="mb-4 rounded-xl border border-white/20 bg-white/10 p-3">
+          <div className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-white/60">
             <Cloud className="h-3.5 w-3.5" />
             Cloud Sync
-            <span className="ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[10px] text-white/55">
+            <span className="ml-auto rounded-full bg-white/20 px-2 py-0.5 text-[10px] text-white/70">
               {cloud.available ? "Supabase" : "Not configured"}
             </span>
           </div>
           <div className="flex items-center justify-between gap-2">
-            <label className="flex items-center gap-2 text-xs text-white/60">
+            <label className="flex items-center gap-2 text-xs text-white/75">
               <input type="checkbox" checked={cloudEnabled} onChange={(e) => setCloudEnabled(e.target.checked)} className="accent-indigo-400" />
               Enable sync
             </label>
@@ -135,18 +135,18 @@ export function Sidebar() {
             </button>
           </div>
           {cloud.syncError && (
-            <div className="mt-2 rounded-lg bg-red-500/20 px-2.5 py-2 text-xs text-red-200">{cloud.syncError}</div>
+            <div className="mt-2 rounded-lg bg-red-500/30 px-2.5 py-2 text-xs text-red-200">{cloud.syncError}</div>
           )}
           {userEmail ? (
             <div className="mt-2 flex items-center justify-between gap-2">
               <div className="min-w-0">
-                <p className="truncate text-xs text-white/70">{userEmail}</p>
-                <p className="text-[10px] text-white/40">
+                <p className="truncate text-xs text-white/80">{userEmail}</p>
+                <p className="text-[10px] text-white/50">
                   {cloud.lastSyncAt ? `Last sync: ${new Date(cloud.lastSyncAt).toLocaleString()}` : "Not synced yet"}
                 </p>
               </div>
               <button type="button" onClick={() => cloud.signOut()}
-                className="glass-button rounded-lg p-2 text-white/60 hover:text-white" title="Sign out">
+                className="glass-button rounded-lg p-2 text-white/70 hover:text-white" title="Sign out">
                 <LogOut className="h-4 w-4" />
               </button>
             </div>
@@ -167,7 +167,7 @@ export function Sidebar() {
               <Plus className="h-4 w-4" /> New Note
             </button>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50" />
               <input type="text" placeholder="Search notes..." value={searchQuery}
                 onChange={(e) => { setSearchQuery(e.target.value); setSemanticResults(null); setSearchMode("keyword"); }}
                 onKeyDown={(e) => e.key === "Enter" && handleSmartSearch()}
@@ -179,7 +179,7 @@ export function Sidebar() {
               {isSearching ? "Searching..." : "AI Smart Search"}
             </button>
             {searchMode === "semantic" && semanticResults && (
-              <p className="mt-1.5 text-xs text-white/50">Semantic results · {semanticResults.length} found</p>
+              <p className="mt-1.5 text-xs text-white/60">Semantic results · {semanticResults.length} found</p>
             )}
           </>
         )}
@@ -196,11 +196,11 @@ export function Sidebar() {
         {/* NOTEBOOKS VIEW */}
         {sidebarView === "notebooks" && (
           <section className="p-3">
-            <h2 className="mb-3 flex items-center gap-1.5 px-1 text-xs font-medium uppercase tracking-wider text-white/50">
+            <h2 className="mb-3 flex items-center gap-1.5 px-1 text-xs font-medium uppercase tracking-wider text-white/60">
               <BookOpen className="h-3.5 w-3.5" /> Notebooks
             </h2>
             {showNewFolder && (
-              <div className="mb-3 rounded-xl border border-white/15 bg-white/5 p-3 space-y-2">
+              <div className="mb-3 rounded-xl border border-white/25 bg-white/10 p-3 space-y-2">
                 <input type="text" value={newFolderName} onChange={(e) => setNewFolderName(e.target.value)}
                   placeholder="Notebook name..." autoFocus
                   onKeyDown={(e) => { if (e.key === "Enter") handleCreateFolder(); if (e.key === "Escape") setShowNewFolder(false); }}
@@ -221,16 +221,16 @@ export function Sidebar() {
             <ul className="space-y-1">
               <li>
                 <button type="button" onClick={() => { setSelectedFolderId(null); setSidebarView("notes"); }}
-                  className="folder-item flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-white/70 hover:bg-white/10 hover:text-white">
+                  className="folder-item flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-white/80 hover:bg-white/15 hover:text-white">
                   <FolderOpen className="h-4 w-4" />
                   All Notes
-                  <span className="ml-auto text-xs text-white/40">{notes.length}</span>
+                  <span className="ml-auto text-xs text-white/50">{notes.length}</span>
                 </button>
               </li>
               {folders.map((folder) => (
                 <li key={folder.id}>
                   {editingFolderId === folder.id ? (
-                    <div className="rounded-xl border border-white/15 bg-white/5 p-3 space-y-2">
+                    <div className="rounded-xl border border-white/25 bg-white/10 p-3 space-y-2">
                       <input type="text" value={editingFolderName} onChange={(e) => setEditingFolderName(e.target.value)} autoFocus
                         onKeyDown={(e) => { if (e.key === "Enter") handleRenameFolder(folder.id); if (e.key === "Escape") setEditingFolderId(null); }}
                         className="glass-input w-full rounded-lg px-3 py-2 text-sm" />
@@ -252,22 +252,22 @@ export function Sidebar() {
                     </div>
                   ) : (
                     <div className={cn("folder-item group flex items-center gap-1 rounded-lg",
-                      selectedFolderId === folder.id ? "active bg-white/15 text-white" : "text-white/70 hover:bg-white/10")}>
+                      selectedFolderId === folder.id ? "active bg-white/25 text-white" : "text-white/80 hover:bg-white/15")}>
                       <button type="button" onClick={() => { setSelectedFolderId(folder.id); setSidebarView("notes"); }}
                         className="flex flex-1 items-center gap-2 px-3 py-2.5 text-sm hover:text-white">
                         <span className="h-3 w-3 rounded-full shrink-0" style={{ backgroundColor: folder.color ?? "#a78bfa" }} />
                         <span className="truncate">{folder.name}</span>
-                        <span className="ml-auto text-xs text-white/40">{notes.filter((n) => n.folderId === folder.id).length}</span>
+                        <span className="ml-auto text-xs text-white/50">{notes.filter((n) => n.folderId === folder.id).length}</span>
                       </button>
                       <div className="flex shrink-0 gap-0.5 pr-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button type="button"
                           onClick={() => { setEditingFolderId(folder.id); setEditingFolderName(folder.name); setEditingFolderColor(folder.color ?? FOLDER_COLORS[0]); }}
-                          className="rounded p-1.5 text-white/50 hover:bg-white/10 hover:text-white" title="Rename">
+                          className="rounded p-1.5 text-white/60 hover:bg-white/15 hover:text-white" title="Rename">
                           <Pencil className="h-3.5 w-3.5" />
                         </button>
                         {folder.id !== "inbox" && (
                           <button type="button" onClick={() => deleteFolder(folder.id)}
-                            className="rounded p-1.5 text-white/50 hover:bg-white/10 hover:text-red-300" title="Delete">
+                            className="rounded p-1.5 text-white/60 hover:bg-white/15 hover:text-red-300" title="Delete">
                             <Trash2 className="h-3.5 w-3.5" />
                           </button>
                         )}
@@ -284,27 +284,27 @@ export function Sidebar() {
         {sidebarView === "notes" && (
           <>
             <section className="p-3">
-              <h2 className="mb-2 flex items-center gap-1.5 px-1 text-xs font-medium uppercase tracking-wider text-white/50">
+              <h2 className="mb-2 flex items-center gap-1.5 px-1 text-xs font-medium uppercase tracking-wider text-white/60">
                 <Folder className="h-3.5 w-3.5" /> Folders
               </h2>
               <ul className="space-y-0.5">
                 <li>
                   <button type="button" onClick={() => setSelectedFolderId(null)}
                     className={cn("folder-item flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm",
-                      !selectedFolderId && !selectedTag ? "active bg-white/15 text-white" : "text-white/70 hover:bg-white/10 hover:text-white")}>
+                      !selectedFolderId && !selectedTag ? "active bg-white/25 text-white" : "text-white/80 hover:bg-white/15 hover:text-white")}>
                     <FolderOpen className="h-4 w-4" />
                     All Notes
-                    <span className="ml-auto text-xs text-white/40">{notes.length}</span>
+                    <span className="ml-auto text-xs text-white/50">{notes.length}</span>
                   </button>
                 </li>
                 {folders.map((folder) => (
                   <li key={folder.id}>
                     <button type="button" onClick={() => setSelectedFolderId(folder.id)}
                       className={cn("folder-item flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm",
-                        selectedFolderId === folder.id ? "active bg-white/15 text-white" : "text-white/70 hover:bg-white/10 hover:text-white")}>
+                        selectedFolderId === folder.id ? "active bg-white/25 text-white" : "text-white/80 hover:bg-white/15 hover:text-white")}>
                       <span className="h-2 w-2 rounded-full" style={{ backgroundColor: folder.color ?? "#a78bfa" }} />
                       {folder.name}
-                      <span className="ml-auto text-xs text-white/40">{notes.filter((n) => n.folderId === folder.id).length}</span>
+                      <span className="ml-auto text-xs text-white/50">{notes.filter((n) => n.folderId === folder.id).length}</span>
                     </button>
                   </li>
                 ))}
@@ -312,15 +312,15 @@ export function Sidebar() {
             </section>
 
             {allTags.length > 0 && (
-              <section className="border-t border-white/10 p-3">
-                <h2 className="mb-2 flex items-center gap-1.5 px-1 text-xs font-medium uppercase tracking-wider text-white/50">
+              <section className="border-t border-white/20 p-3">
+                <h2 className="mb-2 flex items-center gap-1.5 px-1 text-xs font-medium uppercase tracking-wider text-white/60">
                   <Tag className="h-3.5 w-3.5" /> Tags
                 </h2>
                 <div className="flex flex-wrap gap-1.5 px-1">
                   {allTags.map((tag) => (
                     <button key={tag} type="button" onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
                       className={cn("tag-pill rounded-full px-2.5 py-1 text-xs",
-                        selectedTag === tag ? "active bg-indigo-500/40 text-white ring-1 ring-white/30" : "bg-white/10 text-white/70 hover:bg-white/15 hover:text-white")}>
+                        selectedTag === tag ? "active bg-indigo-500/50 text-white ring-1 ring-white/40" : "bg-white/15 text-white/80 hover:bg-white/20 hover:text-white")}>
                       {tag}
                     </button>
                   ))}
@@ -328,37 +328,37 @@ export function Sidebar() {
               </section>
             )}
 
-            <section className="border-t border-white/10 p-3">
-              <h2 className="mb-2 px-1 text-xs font-medium uppercase tracking-wider text-white/50">Notes</h2>
+            <section className="border-t border-white/20 p-3">
+              <h2 className="mb-2 px-1 text-xs font-medium uppercase tracking-wider text-white/60">Notes</h2>
               {displayNotes.length === 0 ? (
-                <p className="px-3 py-6 text-center text-sm text-white/40">{searchQuery ? "No notes found" : "Create your first note"}</p>
+                <p className="px-3 py-6 text-center text-sm text-white/50">{searchQuery ? "No notes found" : "Create your first note"}</p>
               ) : (
                 <ul className="space-y-1">
                   {displayNotes.map(({ note, reason }) => (
                     <li key={note.id}>
                       <div className={cn("note-item group flex items-start gap-1 rounded-xl",
-                        activeNoteId === note.id ? "active ring-1 ring-white/20" : "hover:bg-white/10")}>
+                        activeNoteId === note.id ? "active ring-1 ring-white/30 bg-white/10" : "hover:bg-white/15")}>
                         <button type="button" onClick={() => setActiveNoteId(note.id)} className="min-w-0 flex-1 px-3 py-2.5 text-left">
                           <div className="flex items-center gap-1.5">
                             {note.pinned && <Pin className="h-3 w-3 shrink-0 fill-amber-300 text-amber-300" />}
                             <span className="text-shadow-readable truncate text-sm font-medium">{note.title || "Untitled"}</span>
                           </div>
-                          <p className="mt-0.5 truncate text-xs text-white/45">{note.content.slice(0, 60) || "Empty note"}</p>
-                          {reason && <p className="mt-1 text-xs italic text-indigo-300/80">{reason}</p>}
+                          <p className="mt-0.5 truncate text-xs text-white/55">{note.content.slice(0, 60) || "Empty note"}</p>
+                          {reason && <p className="mt-1 text-xs italic text-indigo-300">{reason}</p>}
                           <div className="mt-1 flex items-center gap-2">
-                            <span className="text-[10px] text-white/35">{formatRelativeTime(note.updatedAt)}</span>
+                            <span className="text-[10px] text-white/45">{formatRelativeTime(note.updatedAt)}</span>
                             {note.tags.slice(0, 2).map((t) => (
-                              <span key={t} className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] text-white/50">{t}</span>
+                              <span key={t} className="rounded bg-white/15 px-1.5 py-0.5 text-[10px] text-white/60">{t}</span>
                             ))}
                           </div>
                         </button>
                         <div className="flex shrink-0 flex-col gap-0.5 pr-1 pt-1 opacity-0 transition-opacity group-hover:opacity-100">
                           <button type="button" onClick={() => togglePin(note.id)}
-                            className="rounded p-1 text-white/50 hover:bg-white/10 hover:text-amber-300" title={note.pinned ? "Unpin" : "Pin"}>
+                            className="rounded p-1 text-white/60 hover:bg-white/15 hover:text-amber-300" title={note.pinned ? "Unpin" : "Pin"}>
                             <Pin className="h-3.5 w-3.5" />
                           </button>
                           <button type="button" onClick={() => deleteNote(note.id)}
-                            className="rounded p-1 text-white/50 hover:bg-white/10 hover:text-red-300" title="Delete">
+                            className="rounded p-1 text-white/60 hover:bg-white/15 hover:text-red-300" title="Delete">
                             <Trash2 className="h-3.5 w-3.5" />
                           </button>
                         </div>
