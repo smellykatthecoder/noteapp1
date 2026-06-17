@@ -97,8 +97,8 @@ export function Sidebar() {
     <GlassPanel className="flex h-full w-80 shrink-0 flex-col overflow-hidden">
       <div className="border-b border-white/10 p-4">
         <div className="mb-4 flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-indigo-300" />
-          <h1 className="text-shadow-readable text-lg font-semibold tracking-tight">Liquid Notes</h1>
+        <span className="text-xl">📝</span>
+        <h1 className="text-shadow-readable text-lg font-semibold tracking-tight">Liquid Notes</h1>
         </div>
 
         {/* View toggle */}

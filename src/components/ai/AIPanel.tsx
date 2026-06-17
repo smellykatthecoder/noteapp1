@@ -96,7 +96,7 @@ export function AIPanel() {
         <div className="mb-3 flex items-center gap-2">
           <Brain className="h-5 w-5 text-violet-300" />
           <h2 className="text-shadow-readable text-sm font-semibold">
-            AI Assistant
+            AI Assistant <span className="text-xs text-indigo-300">(beta)</span>
           </h2>
         </div>
 
