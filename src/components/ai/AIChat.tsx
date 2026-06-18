@@ -12,10 +12,8 @@ interface ChatMessage {
 }
 
 const SUGGESTIONS = [
-  "Summarize my open note",
-  "What are my action items across all notes?",
-  "Which notes mention meetings?",
-  "Help me organize my thoughts",
+  "Summarise my open note.",
+  "Do any notes mention homework?",
 ];
 
 export function AIChat() {
