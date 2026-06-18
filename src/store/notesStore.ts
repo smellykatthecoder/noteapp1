@@ -43,7 +43,7 @@ interface NotesState {
 
 const DEFAULT_FOLDERS: Folder[] = [
   { id: "inbox", name: "Inbox", color: "#93c5fd" },
-  { id: "work", name: "Work", color: "#a78bfa" },
+  { id: "school", name: "School", color: "#a78bfa" },
   { id: "personal", name: "Personal", color: "#67e8f9" },
 ];
 
